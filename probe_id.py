@@ -4,6 +4,7 @@ from glob import glob
 # serial number. It takes an input separated by a comma and creates the device directory. It returns a list of the
 # various probe positions as well as their directories on the Pi.
 
+
 def probe_identifier():
     base_dir = '/sys/bus/w1/devices/'
     device_folder = glob(base_dir + '28*')[:]
@@ -12,7 +13,18 @@ def probe_identifier():
     device_serials_str = ', '.join(['(' + str(i + 1) + ') ' + device_serials[i] for i, _ in enumerate(device_serials)])
     print("Available probes:\n" + device_serials_str + '.')
     print("Indicate the probe position with the in the form:\n "
-          "e.g. Ambient, Hot liquor, Mash tun top, Mash tun bottom")
+          "e.g. Ambient, HL, Mash tun top, Mash tun bottom\n"
+          "Please indicate the hot liquor tank control probe with the name HL, ")
     positions = input()
     positions = positions.split(', ')
-    return positions, device_files
+    logging_positions = []
+    logging_directories = []
+    hl_probe = []
+    for i, j in zip(positions, device_files):
+        if i == 'HL':
+            hl_probe = [i, j]
+        elif i != 'na' and i != 'HL':
+            logging_positions.append(i)
+            logging_directories.append(j)
+    return logging_positions, logging_directories, hl_probe
+

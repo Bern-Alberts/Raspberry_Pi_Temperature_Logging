@@ -27,12 +27,12 @@ def probe_call(filename):
 
 
 if __name__ == '__main__':
-    while True:
-        dt1 = dt.now()
         p = Pool(4)
-        temp = p.map(probe_call, device_files)
-        temp_dict = OrderedDict(zip(device_positions, temp))
-        temp_display = [str(i) + ' = ' + str(j) for i, j in temp_dict.items()]
-        dt2 = dt.now()
-        print(', '.join(temp_display))
-        print(dt2 - dt1)
+        while True:
+            dt1 = dt.now()
+            temp = p.map(probe_call, device_files)
+            temp_dict = OrderedDict(zip(device_positions, temp))
+            temp_display = [str(i) + ' = ' + str(j) for i, j in temp_dict.items()]
+            dt2 = dt.now()
+            print(', '.join(temp_display))
+            print(dt2 - dt1)

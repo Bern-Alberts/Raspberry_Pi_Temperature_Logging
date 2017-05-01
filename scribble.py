@@ -1,15 +1,25 @@
-import subprocess
-from probe_id import probe_identifier
-from datetime import datetime as dt
-import numpy as np
+from glob import glob
 
-positions, device_files = probe_identifier()
-
-
-while True:
-    t0 = dt.now()
-    operations = ['cat ' + i for i in device_files]
-    simultaneous_operation = '(' + ' & '.join(operations) + ')'
-    s1 = subprocess.check_output(simultaneous_operation, shell=True)
-    #s1 = s1.decode(encoding='utf-8').split('\n')
-    print(s1)
+base_dir = '/sys/bus/w1/devices/'
+device_folder = glob(base_dir + '28*')[:]
+device_files = [device_folder[i] + '/w1_slave' for i, _ in enumerate(device_folder)]
+device_serials = [device_folder[i].strip('/sys/bus/w1/devices/28-') for i, _ in enumerate(device_folder)]
+device_serials_str = ', '.join(['(' + str(i + 1) + ') ' + device_serials[i] for i, _ in enumerate(device_serials)])
+print("Available probes:\n" + device_serials_str + '.')
+print("Indicate the probe position with the in the form:\n "
+      "e.g. Ambient, HL, Mash tun top, Mash tun bottom\n"
+      "Please indicate the hot liquor tank control probe with the name HL, ")
+positions = input()
+positions = positions.split(', ')
+print(positions, device_files)
+logging_positions = []
+logging_directories = []
+hl_probe = []
+for i, j in zip(positions, device_files):
+    print(i, j)
+    if i != 'na':
+        logging_positions.append(i)
+        logging_directories.append(j)
+#    else:
+#        print()
+print('fuck = ', logging_positions, logging_directories)

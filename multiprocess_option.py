@@ -37,15 +37,13 @@ def probe_call(filename):
 # program I cannot control the order in which the readings are returned.
 
 def temp_readings():
-#    if __name__ == '__main__':
+#if __name__ == '__main__':
+    p = Pool()
+    while True:
         dt1 = dt.now()
-        p = Pool(4)
         temp = p.map(probe_call, device_files)
         temp_display = [str(i) + ' = ' + str(j) for i, j in zip(device_positions, temp)]
         dt2 = dt.now()
         print(', '.join(temp_display))
         print(dt2 - dt1)
-        time.sleep(0.5)
         return temp
-
-print(temp_readings())
