@@ -1,11 +1,10 @@
 from multiprocessing import Pool
 import subprocess
 import numpy as np
-import time
 from datetime import datetime as dt
 from probe_id import probe_identifier
 
-device_positions, device_files = probe_identifier()
+device_positions, device_files, HL_probe = probe_identifier()
 
 # This program calls the probe in question using its file directory as an input and the subprocess module.
 # It the separates the temperature string from the rest and returns it as an integer. It contains an error process that
@@ -46,4 +45,6 @@ def temp_readings():
         dt2 = dt.now()
         print(', '.join(temp_display))
         print(dt2 - dt1)
-        return temp
+
+
+temp_readings()

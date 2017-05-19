@@ -4,22 +4,9 @@ import numpy as np
 import time
 from datetime import datetime as dt
 from probe_id import probe_identifier
-import sqlite3
 from time import gmtime, strftime
 
-device_positions, device_files, HL_probe = probe_identifier()
-
-conn = sqlite3.connect('test_database.db')
-c = conn.cursor()
-
-style_brewed = input("Style brewed:\n")
-main_date = strftime('%Y_%m_%d', gmtime())
-table_name = style_brewed + '_' + main_date
-print(table_name)
-table_columns = "(" + ', '.join(device_positions) + ")"
-create_table = "CREATE TABLE " + table_name + table_columns
-c.execute(create_table)
-print(create_table)
+colour_position, colour_id = probe_identifier()
 
 
 def probe_call(filename):
@@ -43,15 +30,12 @@ def temp_logging_and_display():
         p = Pool()
         while True:
             dt1 = dt.now()
-            temp = p.map(probe_call, device_files)
-            temp_insert = "INSERT INTO " + table_name + " VALUES (?)"
-            print(temp_insert)
-            c.executemany(temp_insert, temp)
-            temp_display = [str(i) + ' = ' + str(j) for i, j in zip(device_positions, temp)]
+            temp = p.map(probe_call, colour_id.values())
+            display_string = ', '.join([i + ' = ' + str(j) for i, j in zip(colour_position.values(), temp)])
+            print(display_string)
             dt2 = dt.now()
-            print(', '.join(temp_display))
             print(dt2 - dt1)
     except KeyboardInterrupt:
-        conn.commit()
-        conn.close()
         return
+
+temp_logging_and_display()
