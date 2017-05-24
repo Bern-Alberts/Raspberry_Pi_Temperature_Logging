@@ -4,7 +4,7 @@ import numpy as np
 from datetime import datetime as dt
 from probe_id import probe_identifier
 
-device_positions, device_files, HL_probe = probe_identifier()
+colour_position, colour_id = probe_identifier()
 
 # This program calls the probe in question using its file directory as an input and the subprocess module.
 # It the separates the temperature string from the rest and returns it as an integer. It contains an error process that
@@ -37,14 +37,11 @@ def probe_call(filename):
 
 def temp_readings():
 #if __name__ == '__main__':
-    p = Pool()
+    p = Pool(4)
     while True:
-        dt1 = dt.now()
-        temp = p.map(probe_call, device_files)
-        temp_display = [str(i) + ' = ' + str(j) for i, j in zip(device_positions, temp)]
-        dt2 = dt.now()
+        temp = p.map(probe_call, colour_id.values())
+        temp_display = [str(i) + ' = ' + str(j) for i, j in zip(colour_position.values(), temp)]
         print(', '.join(temp_display))
-        print(dt2 - dt1)
 
 
 temp_readings()
