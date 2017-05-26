@@ -1,6 +1,6 @@
 from datetime import date
 from probe_id import probe_identifier
-from collections  import OrderedDict
+from collections import OrderedDict
 
 from sqlalchemy import create_engine
 from brewery_db_delcarative import Base, Style, Brew, Brew_probe
@@ -14,13 +14,13 @@ session = DBSession()
 
 brew_style = [input('Style to be brewed:\n')]
 brew_date = str(date.today())
+print(brew_date)
 colour_positions, colour_directory, colour_id = probe_identifier()
 
 
 def db_setup():
     style_num = 0
     (ret, ), = session.query(exists().where(Style.style.in_(brew_style)))
-    print(ret)
     if ret is True:
         print('Style exists.')
         for i, in session.query(Style.id).filter(Style.style == brew_style[0]):
@@ -55,7 +55,7 @@ def db_setup():
 
     for a, i in colour_id.items():
         (bpc, ), = session.query(exists().where((and_(Brew_probe.brew_id == brew_num, Brew_probe.probe_id == i))))
-        print(bpc)
+
         if bpc is True:
             print('Brew-probe number exists.')
 
@@ -71,8 +71,8 @@ def db_setup():
             for y, in session.query(Brew_probe.id).filter(Brew_probe.brew_id == brew_num). \
                     filter(Brew_probe.probe_id == i):
                 brew_probes.update([(a, y)])
-                pass
-    print(list(brew_probes.items()))
+
+    input("Press enter to continue.")
     return brew_probes
 
 session.close_all()

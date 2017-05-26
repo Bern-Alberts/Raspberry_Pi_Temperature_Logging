@@ -57,7 +57,8 @@ def temp_logging_and_display():
                 session.commit()
             display_string = ', '.join([i + ' = ' + str(j) for i, j in zip(colour_positions.values(), temp)])
             os.system('clear')
-            print(display_string)
+            print(display_string, '\n')
+            print('Press "ctrl + c" twice to end logging.')
     except KeyboardInterrupt:
         quit()
 
